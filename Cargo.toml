@@ -1,0 +1,13 @@
+[package]
+name = "rusty_threads"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+doctest = false
+
+
+[dependencies]
+
+[build-dependencies]
+bindgen = "0.71.0"
