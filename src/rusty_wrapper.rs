@@ -267,7 +267,7 @@ pub fn device_handle(device_name: &str) -> Option<u32> {
 ///
 /// let ctrl = device_control_block_t {
 ///     command: rusty_threads::DISK_READ,
-///     control1: 0, // e.g., sector
+///     control1: 0, // e.g., track
 ///     control2: 0, // e.g., platter
 ///     input_data: input.as_mut_ptr() as *mut _,
 ///     output_data: output.as_mut_ptr() as *mut _,
@@ -315,35 +315,29 @@ pub fn set_debug_level(level: i32) {
 
 /// Prints formatted output to the console using the THREADS kernel's logging function.
 ///
-/// This function wraps the variadic C `console_output` call, allowing Rust code
-/// to use familiar `format!` syntax for building messages. It separates debug output
-/// from normal output based on the `debug` flag.
+/// This function wraps the `console_output` call, allowing Rust code to send messages
+/// to the kernel's console. The `debug` flag determines whether the message is treated
+/// as debug output or standard output.
 ///
 /// # Arguments
 ///
 /// * `debug` – `true` for debug output, `false` for standard output.
-/// * `args` – A format string with parameters (like in `println!`).
+/// * `message` – A string containing the message to be logged.
 ///
 /// # Example
 ///
 /// ```ignore
-/// rusty_threads::console_output(true, "Process {} started", pid);
-/// rusty_threads::console_output(false, "System ready.");
+/// rusty_threads::console_output(true, "Debug: System initialized.");
 /// ```
-pub fn console_output(debug: bool, format: std::fmt::Arguments) {
-    use std::fmt::Write;
-
-    let mut buffer = String::new();
-    let _ = write!(&mut buffer, "{}", format);
-
-    if let Ok(c_str) = CString::new(buffer) {
+pub fn console_output(debug: bool, message: &str) {
+    if let Ok(c_str) = CString::new(message) {
         unsafe {
             crate::rusty_thread_bindings::c_console_output(
                 debug as bool,
-                c_str.into_raw() as *mut i8,
+                c_str.as_ptr() as *mut i8,
             );
         }
-    } 
+    }
 }
 
 /// Halts execution of the THREADS kernel.
@@ -417,54 +411,4 @@ pub fn get_interrupt_handlers() -> &'static mut [interrupt_handler_t] {
         let raw_ptr = c_get_interrupt_handlers();
         std::slice::from_raw_parts_mut(raw_ptr, COUNT)
     }
-}
-
-
-/// Retrieves the system call handler vector used by the THREADS kernel.
-///
-/// This vector contains pointers to functions responsible for handling specific system calls.
-/// Each entry in the array corresponds to a syscall ID from 0 up to `THREADS_MAX_SYSCALLS - 1`.
-///
-/// To register a system call handler, assign a function to the appropriate index:
-///
-/// ```ignore
-/// extern "C" fn my_syscall_handler(args: *mut system_call_arguments_t) {
-///     // handle syscall
-/// }
-///
-/// let syscall_vector = get_system_call_vector();
-/// 
-/// unsafe {
-///     *syscall_vector.add(SYSCALL_ID) = Some(my_syscall_handler);
-/// }
-/// ```
-///
-/// # Safety
-///
-/// The caller must ensure that the function signature matches:
-///
-/// ```c 
-/// typedef struct
-/// {
-///     uint32_t call_id;
-///     uint32_t argDword
-///     unit32_t argInt;
-///     char *arg_string;
-/// } system_call_arguments_t;
-/// 
-/// void handler(system_call_arguments_t* args);
-/// 
-/// ```
-///
-/// In Rust:
-///
-/// ```ignore
-/// extern "C" fn handler(args: *mut system_call_arguments_t) { ... }
-/// ```
-///
-/// # Returns
-///
-/// A mutable pointer to the system call handler vector.
-pub fn get_system_call_vector() -> *mut system_call_handler_t {
-    unsafe { c_get_system_call_vector() }
 }

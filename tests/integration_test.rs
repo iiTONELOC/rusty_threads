@@ -75,7 +75,6 @@ fn test_public_wrapper_accessability() {
     assert!(rusty_wrapper::device_initialize as usize != 0);
     assert!(rusty_wrapper::get_interrupt_handlers as usize != 0);
     assert!(rusty_wrapper::get_psr as usize != 0);
-    assert!(rusty_wrapper::get_system_call_vector as usize != 0);
     assert!(rusty_wrapper::set_debug_level as usize != 0);
     assert!(rusty_wrapper::set_psr as usize != 0);
     assert!(rusty_wrapper::stop as usize != 0);

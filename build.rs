@@ -20,7 +20,7 @@ fn main() {
         .allowlist_function("set_psr")
         .allowlist_function("system_clock")
         .allowlist_function("get_interrupt_handlers")
-        .allowlist_function("get_system_call_vector")
+        // .allowlist_function("get_system_call_vector")
         .allowlist_function("device_initialize")
         .allowlist_function("device_handle")
         .allowlist_function("device_control")
@@ -46,7 +46,7 @@ fn main() {
     // === Link .lib files ===
     println!("cargo:rustc-link-search=native=lib/"); // path to .lib/ directory
     println!("cargo:rustc-link-lib=dylib=THREADS"); // name of .lib file (without 'lib' prefix or extension)
-
+    println!("cargo:rustc-link-lib=static=ThreadsMain");
 
      // === Copy DLL to output folder ===
      let target_dir = PathBuf::from(env::var("CARGO_TARGET_DIR").unwrap_or_else(|_| "target".into()))
