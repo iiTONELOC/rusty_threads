@@ -124,4 +124,4 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 ## References
 
-University of Arizona, College of Science and Technology. (n.d.). *THREADS (Threaded Heuristic Research, Educational, And Development Simulator): User manual* (Version 1.1.0.1) [Unpublished internal document]. University of Arizona.
+University of Arizona, College of Science and Technology. (n.d.). *THREADS (Threaded Heuristic Research, Educational, And Development Simulator): User manual* (Version 1.0) [Unpublished internal document]. University of Arizona.
