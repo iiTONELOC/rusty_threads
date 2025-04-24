@@ -84,7 +84,7 @@ For now, any and all 'tests' simply assert the bindings are valid. No further as
     git clone git@github.com:iiTONELOC/rusty_threads.git
     ```
 
-2. Add `THREADS.dll` and `THREADS.lib` to the `/lib` folder, as these files are excluded from version control.
+2. Add `THREADS.dll`, `THREADS.lib`, and `THREADSMain.lib` to the `/lib` folder, as these files are excluded from version control.
 
 3. Build the library using the `cargo build` command:
 
